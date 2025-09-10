@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
     EditText et_j_name;
     Button btn_j_getName;
 
+    TextView tv_j_errorMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         tv_j_greeting = findViewById(R.id.tv_v_greeting);
         et_j_name = findViewById(R.id.et_v_name);
         btn_j_getName = findViewById(R.id.btn_v_getGreeting);
+        tv_j_errorMessage = findViewById(R.id.tv_v_dataEntryError);
 
        // call listeners
         setOnClickListenerBegin();
@@ -68,8 +70,26 @@ public class MainActivity extends AppCompatActivity
             //this what we do when the btn_j_getName button was pressed
             public void onClick(View v) {
                 //Log.d("--DEBUG--", "Begin Button has been pressed");
-                String message = createGreetingMessage();
-                setGreetingMessage(message);
+                if(inputValidation())
+                {
+                    String message = createGreetingMessage();
+                    setGreetingMessage(message);
+                   //arNameTextbox();
+                    //did the right thing
+                    tv_j_errorMessage.setVisibility(TextView.INVISIBLE);
+                    btn_j_getName.setClickable(false);
+                }
+                else
+                {
+                    //user did not input valid name
+                    tv_j_errorMessage.setVisibility(TextView.VISIBLE);
+                    //inputValidation();
+
+
+                }
+
+
+                clearNameTextbox();
             }
         });
 
@@ -85,6 +105,7 @@ public class MainActivity extends AppCompatActivity
 
         message += name;
 
+
         return message;
     }
     public void setGreetingMessage(String message)
@@ -95,13 +116,82 @@ public class MainActivity extends AppCompatActivity
         tv_j_greeting.setVisibility(TextView.VISIBLE);
     }
 
+
+    public void clearNameTextbox()
+    {
+        et_j_name.setText("");
+
+
+    }
     //clear text box after use
+    //good job
+    public boolean inputValidation()
+    {
+        boolean validUserInput = true;
+
+        String name = et_j_name.getText().toString();
+
+        if(name.isEmpty())
+        {
+            Log.d("Error:", "No name entered");
+            return false;
+        }
+        else if(containsNoAlphaNumberic(name))
+        {
+            Log.d("Error:", "Names should not contain no alpha text");
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+    public boolean containsNoAlphaNumberic(String name)
+    {
+        String specials = "`~!@#$%^&*()_+=-[]{}|;:.><,?/";
+                for(int i = 0; i < name.length(); i++)
+                {
+                    for(int j = 0 ; j < specials.length(); j++)
+                    {
+
+                        if(name.charAt(i) == specials.charAt(j))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+
+
+    }
+
+
+
+
+
+
     //only show message if name was entered
-    //validate name
-    //3 error messages:
-        //names does not contain numbers, special characters/white space characters
+    //
+
+
+
+
         //name was entered
-        //only one greeting per run
+    // only one greeting per run
 
 
 
